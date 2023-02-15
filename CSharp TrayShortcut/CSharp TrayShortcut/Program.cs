@@ -1,11 +1,10 @@
+using System.Configuration;
 using System.Diagnostics;
 
 namespace CSharp_TrayShortcut
 {
     internal static class Program
     {
-        private const string _path = @"";
-
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -19,10 +18,14 @@ namespace CSharp_TrayShortcut
 
         public class MyCustomApplicationContext : ApplicationContext
         {
+            private readonly string _iconPath = ConfigurationManager.AppSettings["icon"];
+            private readonly string _path = ConfigurationManager.AppSettings["path"];
             private readonly NotifyIcon trayIcon;
+            private Icon _icon = SystemIcons.Application;
 
             public MyCustomApplicationContext()
             {
+                this.Init();
                 ContextMenuStrip contextMenuStrip = new();
 
                 this.GenerateMenu(contextMenuStrip);
@@ -34,29 +37,21 @@ namespace CSharp_TrayShortcut
 
                 trayIcon = new NotifyIcon()
                 {
-                    Icon = SystemIcons.Application,
+                    Icon = _icon,
                     ContextMenuStrip = contextMenuStrip,
                     Visible = true
                 };
             }
 
-            private void GenerateMenu(ContextMenuStrip contextMenuStrip, string path = _path, ToolStripMenuItem parent = null)
+            private void Exit(object sender, EventArgs e)
             {
-                if (parent != null)
-                {
-                    var files = Directory.GetFiles(path);
-                    foreach (var f in files)
-                    {
-                        var subMenuItem = new ToolStripMenuItem
-                        {
-                            Name = f,
-                            Text = Path.GetFileName(f),
-                            Image = Icon.ExtractAssociatedIcon(f).ToBitmap()
-                        };
-                        subMenuItem.Click += new EventHandler(ItemClick);
-                        parent.DropDownItems.Add(subMenuItem);
-                    }
-                }
+                trayIcon.Visible = false;
+                Application.Exit();
+            }
+
+            private void GenerateMenu(ContextMenuStrip contextMenuStrip, string path = null, ToolStripMenuItem parent = null)
+            {
+                path ??= _path;
 
                 var directories = Directory.GetDirectories(path);
                 foreach (var d in directories)
@@ -78,12 +73,46 @@ namespace CSharp_TrayShortcut
                         parent.DropDownItems.Add(menuItem);
                     }
                 }
+
+                if (parent != null)
+                {
+                    var files = Directory.GetFiles(path);
+                    foreach (var f in files)
+                    {
+                        var subMenuItem = new ToolStripMenuItem
+                        {
+                            Name = f,
+                            Text = Path.GetFileNameWithoutExtension(f),
+                            Image = Icon.ExtractAssociatedIcon(f).ToBitmap()
+                        };
+                        subMenuItem.Click += new EventHandler(ItemClick);
+                        parent.DropDownItems.Add(subMenuItem);
+                    }
+                }
             }
 
-            private void Exit(object sender, EventArgs e)
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S112:General exceptions should never be thrown", Justification = "<En attente>")]
+            private void Init()
             {
-                trayIcon.Visible = false;
-                Application.Exit();
+                if (!Path.Exists(_path))
+                {
+                    throw new ApplicationException($"Path does not exist: {_path}");
+                }
+                if (!string.IsNullOrEmpty(_iconPath))
+                {
+                    if (File.Exists(_iconPath))
+                    {
+                        _icon = new Icon(_path);
+                    }
+                    else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), _iconPath)))
+                    {
+                        _icon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), _iconPath));
+                    }
+                    else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", _iconPath)))
+                    {
+                        _icon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", _iconPath));
+                    }
+                }
             }
 
             private void ItemClick(object sender, EventArgs e)

@@ -18,10 +18,11 @@ namespace CSharp_TrayShortcut
 
         public class MyCustomApplicationContext : ApplicationContext
         {
-            private readonly string _iconPath = ConfigurationManager.AppSettings["icon"];
+            private readonly NotifyIcon _notificationIcon;
             private readonly string _path = ConfigurationManager.AppSettings["path"];
-            private readonly NotifyIcon trayIcon;
-            private Icon _icon = SystemIcons.Application;
+            private readonly string _trayIconPath = ConfigurationManager.AppSettings["icon"];
+            private Icon _folderIcon = SystemIcons.WinLogo;
+            private Icon _trayIcon = SystemIcons.Application;
 
             public MyCustomApplicationContext()
             {
@@ -35,9 +36,9 @@ namespace CSharp_TrayShortcut
                     new ToolStripMenuItem("Exit", null, new EventHandler(Exit))
                 });
 
-                trayIcon = new NotifyIcon()
+                _notificationIcon = new NotifyIcon()
                 {
-                    Icon = _icon,
+                    Icon = _trayIcon,
                     ContextMenuStrip = contextMenuStrip,
                     Visible = true
                 };
@@ -45,7 +46,7 @@ namespace CSharp_TrayShortcut
 
             private void Exit(object sender, EventArgs e)
             {
-                trayIcon.Visible = false;
+                _notificationIcon.Visible = false;
                 Application.Exit();
             }
 
@@ -60,6 +61,7 @@ namespace CSharp_TrayShortcut
                     {
                         Name = d,
                         Text = Path.GetFileName(d),
+                        Image = _folderIcon.ToBitmap()
                     };
 
                     this.GenerateMenu(contextMenuStrip, d, menuItem);
@@ -98,20 +100,35 @@ namespace CSharp_TrayShortcut
                 {
                     throw new ApplicationException($"Path does not exist: {_path}");
                 }
-                if (!string.IsNullOrEmpty(_iconPath))
+
+                if (!string.IsNullOrEmpty(_trayIconPath))
                 {
-                    if (File.Exists(_iconPath))
+                    if (File.Exists(_trayIconPath))
                     {
-                        _icon = new Icon(_path);
+                        _trayIcon = new Icon(_path);
                     }
-                    else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), _iconPath)))
+                    else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), _trayIconPath)))
                     {
-                        _icon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), _iconPath));
+                        _trayIcon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), _trayIconPath));
                     }
-                    else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", _iconPath)))
+                    else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", _trayIconPath)))
                     {
-                        _icon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", _iconPath));
+                        _trayIcon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", _trayIconPath));
                     }
+                }
+
+                string folderIconPath = "folder.ico";
+                if (File.Exists(folderIconPath))
+                {
+                    _folderIcon = new Icon(_path);
+                }
+                else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), folderIconPath)))
+                {
+                    _folderIcon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), folderIconPath));
+                }
+                else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", folderIconPath)))
+                {
+                    _folderIcon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", folderIconPath));
                 }
             }
 

@@ -1,8 +1,9 @@
 {
-    "Customs": [
+    "CustomShortcuts": [
         {
+            "Argument": null,
             "Image": null,
-            "Name": "C:\\Program Files (x86)\\Notepad++\\notepad++.exe",
+            "Path": "C:\\Program Files (x86)\\Notepad++\\notepad++.exe",
             "Text": "Notepad++"
         }
     ],

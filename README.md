@@ -22,7 +22,6 @@
    <hr>
 </div>
 
-
 # C# TrayShortcut
 
 Petite expérimentation avec les TrayIcon pour remplacer les barres d'outils.
@@ -34,19 +33,21 @@ Modifier dans `Configuration\config.json`:
 - `Path` du dossier désiré.
 - `PathFolderIcon` sera l'icone utilisée pour les dossiers (nécessite un `.ico`)
 - `PathTrayIcon` sera l'icone utilisée pour l'application (nécessite un `.ico`)
-- `Customs` ajoutera des éléments qui ne sont pas dans le dossier dans une catégorie séparée:
-	- `Image` icone qui sera à côté (nécessite un `.ico`), si `null` sera remplacé par l'icone du `Name`
- 	- `Name` lien à exécuter (`path` d'un exécutable par exemple)
- 	- `Text` nom affiché
+- `CustomShortcuts` ajoutera des éléments qui ne sont pas dans le dossier dans une catégorie séparée:
+  - `Argument` argument à ajouter au lien à exécuter
+  - `Image` icone qui sera à côté (nécessite un `.ico`), si `null` sera remplacé par l'icone du `Path`
+  - `Path` lien à exécuter
+  - `Text` nom affiché
 
 Exemple:
 
 ```json
 {
-    "Customs": [
+    "CustomShortcuts": [
         {
+            "Argument": null,
             "Image": null,
-            "Name": "C:\\Program Files (x86)\\Notepad++\\notepad++.exe",
+            "Path": "C:\\Program Files (x86)\\Notepad++\\notepad++.exe",
             "Text": "Notepad++"
         }
     ],

@@ -1,13 +1,10 @@
-using System.Configuration;
+using Newtonsoft.Json;
 using System.Diagnostics;
 
 namespace CSharp_TrayShortcut
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
         [STAThread]
         private static void Main()
         {
@@ -19,29 +16,44 @@ namespace CSharp_TrayShortcut
         public class MyCustomApplicationContext : ApplicationContext
         {
             private readonly NotifyIcon _notificationIcon;
-            private readonly string _path = ConfigurationManager.AppSettings["path"];
-            private readonly string _trayIconPath = ConfigurationManager.AppSettings["icon"];
-            private Icon _folderIcon = SystemIcons.WinLogo;
-            private Icon _trayIcon = SystemIcons.Application;
+            private Icon _folderIcon;
+            private Settings _settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(@"Configuration\config.json"));
 
             public MyCustomApplicationContext()
             {
-                this.Init();
-                ContextMenuStrip contextMenuStrip = new();
-
-                this.GenerateMenu(contextMenuStrip);
-
-                contextMenuStrip.Items.AddRange(new ToolStripItem[] {
-                    new ToolStripSeparator(),
-                    new ToolStripMenuItem("Exit", null, new EventHandler(Exit))
-                });
+                //File.WriteAllText(@"Configuration\config.json", JsonConvert.SerializeObject(_settings));
 
                 _notificationIcon = new NotifyIcon()
                 {
-                    Icon = _trayIcon,
-                    ContextMenuStrip = contextMenuStrip,
+                    ContextMenuStrip = new ContextMenuStrip(),
                     Visible = true
                 };
+                this.Refresh(null, null);
+            }
+
+            private static Icon SetIcon(string path)
+            {
+                if (!string.IsNullOrEmpty(path))
+                {
+                    if (File.Exists(path))
+                    {
+                        return new Icon(path);
+                    }
+                    else if (File.Exists(Path.Combine("Ressources", path)))
+                    {
+                        return new Icon(Path.Combine("Ressources", path));
+                    }
+                }
+                return null;
+            }
+
+            private void AfterGenerateMenu(ContextMenuStrip contextMenuStrip)
+            {
+                contextMenuStrip.Items.AddRange(new ToolStripItem[] {
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem(nameof(Refresh), null, new EventHandler(Refresh)),
+                    new ToolStripMenuItem(nameof(Exit), null, new EventHandler(Exit)),
+                });
             }
 
             private void Exit(object sender, EventArgs e)
@@ -50,9 +62,39 @@ namespace CSharp_TrayShortcut
                 Application.Exit();
             }
 
+            private void GenerateCustomsMenu(ContextMenuStrip contextMenuStrip)
+            {
+                if (!_settings.Customs.Any())
+                    return;
+
+                var menuItem = new ToolStripMenuItem
+                {
+                    Name = "Customs",
+                    Text = "Customs",
+                    Image = SystemIcons.Application.ToBitmap()
+                };
+
+                foreach (var c in _settings.Customs.OrderBy(c => c.Text))
+                {
+                    var subMenuItem = new ToolStripMenuItem
+                    {
+                        Name = c.Name,
+                        Text = Path.GetFileNameWithoutExtension(c.Text),
+                        Image = !string.IsNullOrEmpty(c.Image) ? new Icon(c.Image).ToBitmap() : Icon.ExtractAssociatedIcon(c.Name).ToBitmap()
+                    };
+                    subMenuItem.Click += new EventHandler(ItemClick);
+                    menuItem.DropDownItems.Add(subMenuItem);
+                }
+
+                contextMenuStrip.Items.AddRange(new ToolStripItem[] {
+                    new ToolStripSeparator(),
+                    menuItem,
+                });
+            }
+
             private void GenerateMenu(ContextMenuStrip contextMenuStrip, string path = null, ToolStripMenuItem parent = null)
             {
-                path ??= _path;
+                path ??= _settings.Path;
 
                 var directories = Directory.GetDirectories(path);
                 foreach (var d in directories)
@@ -93,41 +135,52 @@ namespace CSharp_TrayShortcut
                 }
             }
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S112:General exceptions should never be thrown", Justification = "<En attente>")]
             private void Init()
             {
-                if (!Path.Exists(_path))
+                if (!Path.Exists(_settings.Path))
                 {
-                    throw new ApplicationException($"Path does not exist: {_path}");
+                    throw new ApplicationException($"Path does not exist: {_settings.Path}");
                 }
 
-                if (!string.IsNullOrEmpty(_trayIconPath))
-                {
-                    if (File.Exists(_trayIconPath))
-                    {
-                        _trayIcon = new Icon(_path);
-                    }
-                    else if (File.Exists(Path.Combine("Ressources", _trayIconPath)))
-                    {
-                        _trayIcon = new Icon(Path.Combine("Ressources", _trayIconPath));
-                    }
-                }
-
-                string folderIconPath = "folder.ico";
-                if (File.Exists(folderIconPath))
-                {
-                    _folderIcon = new Icon(_path);
-                }
-                else if (File.Exists(Path.Combine("Ressources", folderIconPath)))
-                {
-                    _folderIcon = new Icon(Path.Combine("Ressources", folderIconPath));
-                }
+                _folderIcon = SetIcon(_settings.PathFolderIcon) ?? new Icon(Path.Combine("Ressources", "folder_w10.ico"));
             }
 
             private void ItemClick(object sender, EventArgs e)
             {
                 Process.Start(new ProcessStartInfo((sender as ToolStripMenuItem).Name) { UseShellExecute = true });
             }
+
+            private void Refresh(object sender, EventArgs e)
+            {
+                _settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(@"Configuration\config.json"));
+                this.Init();
+                _notificationIcon.Icon = SetIcon(_settings.PathTrayIcon) ?? new Icon(Path.Combine("Ressources", "icon.ico"));
+                var contextMenuStrip = _notificationIcon.ContextMenuStrip;
+                contextMenuStrip.Items.Clear();
+                this.GenerateMenu(contextMenuStrip);
+                this.GenerateCustomsMenu(contextMenuStrip);
+                this.AfterGenerateMenu(contextMenuStrip);
+            }
         }
+    }
+
+    internal class CustomMenu
+    {
+        public string Image { get; set; }
+        public string Name { get; set; }
+        public string Text { get; set; }
+    }
+
+    internal class Settings
+    {
+        public Settings()
+        {
+            Customs = new();
+        }
+
+        public List<CustomMenu> Customs { get; set; }
+        public string Path { get; set; }
+        public string PathFolderIcon { get; set; }
+        public string PathTrayIcon { get; set; }
     }
 }

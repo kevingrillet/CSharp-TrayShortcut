@@ -15,14 +15,13 @@ namespace CSharp_TrayShortcut
 
         public class MyCustomApplicationContext : ApplicationContext
         {
+            private const string _pathConfig = @"Configuration\config.json";
             private readonly NotifyIcon _notificationIcon;
             private Icon _folderIcon;
-            private Settings _settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(@"Configuration\config.json"));
+            private Settings _settings;
 
             public MyCustomApplicationContext()
             {
-                //File.WriteAllText(@"Configuration\config.json", JsonConvert.SerializeObject(_settings));
-
                 _notificationIcon = new NotifyIcon()
                 {
                     ContextMenuStrip = new ContextMenuStrip(),
@@ -52,8 +51,15 @@ namespace CSharp_TrayShortcut
                 contextMenuStrip.Items.AddRange(new ToolStripItem[] {
                     new ToolStripSeparator(),
                     new ToolStripMenuItem(nameof(Refresh), null, new EventHandler(Refresh)),
+                    new ToolStripMenuItem(nameof(Edit), null, new EventHandler(Edit)),
                     new ToolStripMenuItem(nameof(Exit), null, new EventHandler(Exit)),
                 });
+            }
+
+            private void Edit(object sender, EventArgs e)
+            {
+                Process.Start(new ProcessStartInfo(@"notepad") { Arguments = _pathConfig, UseShellExecute = true });
+                //File.WriteAllText(_pathConfig, JsonConvert.SerializeObject(_settings));
             }
 
             private void Exit(object sender, EventArgs e)
@@ -152,7 +158,7 @@ namespace CSharp_TrayShortcut
 
             private void Refresh(object sender, EventArgs e)
             {
-                _settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(@"Configuration\config.json"));
+                _settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(_pathConfig));
                 this.Init();
                 _notificationIcon.Icon = SetIcon(_settings.PathTrayIcon) ?? new Icon(Path.Combine("Ressources", "icon.ico"));
                 var contextMenuStrip = _notificationIcon.ContextMenuStrip;

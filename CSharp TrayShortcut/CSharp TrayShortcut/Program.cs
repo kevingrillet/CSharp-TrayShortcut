@@ -107,13 +107,9 @@ namespace CSharp_TrayShortcut
                     {
                         _trayIcon = new Icon(_path);
                     }
-                    else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), _trayIconPath)))
+                    else if (File.Exists(Path.Combine("Ressources", _trayIconPath)))
                     {
-                        _trayIcon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), _trayIconPath));
-                    }
-                    else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", _trayIconPath)))
-                    {
-                        _trayIcon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", _trayIconPath));
+                        _trayIcon = new Icon(Path.Combine("Ressources", _trayIconPath));
                     }
                 }
 
@@ -122,13 +118,9 @@ namespace CSharp_TrayShortcut
                 {
                     _folderIcon = new Icon(_path);
                 }
-                else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), folderIconPath)))
+                else if (File.Exists(Path.Combine("Ressources", folderIconPath)))
                 {
-                    _folderIcon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), folderIconPath));
-                }
-                else if (File.Exists(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", folderIconPath)))
-                {
-                    _folderIcon = new Icon(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"..\..\..", folderIconPath));
+                    _folderIcon = new Icon(Path.Combine("Ressources", folderIconPath));
                 }
             }
 

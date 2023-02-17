@@ -16,7 +16,7 @@
             {
                 return null;
             }
-            return Icon.ExtractAssociatedIcon(filePath).ToBitmap();
+            return Icon.ExtractAssociatedIcon(filePath)?.ToBitmap();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@
             {
                 return null;
             }
-            return SetIcon(path).ToBitmap();
+            return SetIcon(path)?.ToBitmap();
         }
 
         /// <summary>

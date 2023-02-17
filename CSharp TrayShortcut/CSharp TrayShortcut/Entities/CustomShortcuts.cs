@@ -25,5 +25,13 @@
         /// Display text
         /// </summary>
         public string Text { get; set; }
+
+        public CustomShortcuts()
+        {
+            Argument = string.Empty;
+            Image = string.Empty;
+            Path = string.Empty;
+            Text = string.Empty;
+        }
     }
 }

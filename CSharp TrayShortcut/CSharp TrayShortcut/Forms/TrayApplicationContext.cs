@@ -1,6 +1,6 @@
 ﻿using CSharp_TrayShortcut.Entities;
 using CSharp_TrayShortcut.Helpers;
-using System.Diagnostics;
+using Microsoft.VisualBasic;
 
 namespace CSharp_TrayShortcut.Forms
 {
@@ -24,17 +24,15 @@ namespace CSharp_TrayShortcut.Forms
         }
 
         /// <summary>
-        /// Open Notepad with config file.
+        /// Open Form to edit config file.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Edit(object sender, EventArgs e)
         {
-            Process.Start(new ProcessStartInfo(@"notepad")
-            {
-                Arguments = _pathConfig,
-                UseShellExecute = true
-            });
+            var editForm = new EditForm(_pathConfig, _settings);
+            editForm.FormClosed += (sender, e) => { Refresh(null, null); };
+            editForm.Show();
         }
 
         /// <summary>
@@ -138,16 +136,16 @@ namespace CSharp_TrayShortcut.Forms
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="ApplicationException">If _settings.Path does not exists, BOOM!</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S112:General exceptions should never be thrown", Justification = "<En attente>")]
         private void Refresh(object sender, EventArgs e)
         {
             // Load config file
             _settings = JsonHelpers<Settings>.Load(_pathConfig);
 
             // Check if Path Exists
-            if (!Path.Exists(_settings.Path))
+            while (!Path.Exists(_settings.Path))
             {
-                throw new ApplicationException($"Path does not exist: {_settings.Path}");
+                _settings.Path = Interaction.InputBox("Please enter folder path", $"Path does not exist: {_settings.Path}");
+                JsonHelpers<Settings>.Save(_pathConfig, _settings);
             }
 
             // Load icons

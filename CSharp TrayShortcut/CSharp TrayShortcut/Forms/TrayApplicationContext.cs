@@ -113,7 +113,7 @@ namespace CSharp_TrayShortcut.Forms
                 }
             }
 
-            if (parent != null)
+            if (parent != null || _settings.ShowRootFiles)
             {
                 var files = Directory.GetFiles(path);
                 foreach (var f in files)
@@ -125,7 +125,15 @@ namespace CSharp_TrayShortcut.Forms
                         Text = Path.GetFileNameWithoutExtension(f),
                     };
                     subMenuItem.Click += new EventHandler(ProcessHelpers.Run);
-                    parent.DropDownItems.Add(subMenuItem);
+
+                    if (parent == null)
+                    {
+                        contextMenuStrip.Items.Add(subMenuItem);
+                    }
+                    else
+                    {
+                        parent.DropDownItems.Add(subMenuItem);
+                    }
                 }
             }
         }

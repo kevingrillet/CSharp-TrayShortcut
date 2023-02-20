@@ -25,6 +25,11 @@
         /// </summary>
         public string PathTrayIcon { get; set; }
 
+        /// <summary>
+        /// Force shot root files
+        /// </summary>
+        public bool ShowRootFiles { get; set; }
+
         public Settings()
         {
             CustomShortcuts = new();

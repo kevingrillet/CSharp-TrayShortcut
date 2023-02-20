@@ -9,5 +9,6 @@
     ],
     "Path": "D:\\Users\\kevin\\Toolbar",
     "PathFolderIcon": "folder_w10.ico",
-    "PathTrayIcon": "icon.ico"
+    "PathTrayIcon": "icon.ico",
+    "ShowRootFiles": true
 }

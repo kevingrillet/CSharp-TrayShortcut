@@ -30,14 +30,15 @@ Petite expérimentation avec les TrayIcon pour remplacer les barres d'outils.
 
 Modifier dans `Configuration\config.json`:
 
-- `Path` du dossier désiré
-- `PathFolderIcon` sera l'icone utilisée pour les dossiers (nécessite un `.ico`)
-- `PathTrayIcon` sera l'icone utilisée pour l'application (nécessite un `.ico`)
 - `CustomShortcuts` ajoutera des éléments qui ne sont pas dans le dossier dans une catégorie séparée:
   - `Argument` argument à ajouter au lien à exécuter
   - `Image` icone qui sera à côté (nécessite un `.ico`), si `null` sera remplacé par l'icone du `Path`
   - `Path` lien à exécuter
   - `Text` nom affiché
+- `Path` du dossier désiré
+- `PathFolderIcon` sera l'icone utilisée pour les dossiers (nécessite un `.ico`)
+- `PathTrayIcon` sera l'icone utilisée pour l'application (nécessite un `.ico`)
+- `ShowRootFiles` `true` ou `false` pour dire si on veut voir les fichiers au niveau du `Path`.
 
 Exemple:
 
@@ -53,7 +54,8 @@ Exemple:
     ],
     "Path": "D:\\Users\\kevin\\Toolbar",
     "PathFolderIcon": "folder_w10.ico",
-    "PathTrayIcon": "icon.ico"
+    "PathTrayIcon": "icon.ico",
+    "ShowRootFiles": true
 }
 ```
 

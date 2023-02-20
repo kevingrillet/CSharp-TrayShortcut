@@ -1,4 +1,6 @@
-﻿namespace CSharp_TrayShortcut.Helpers
+﻿using Shell32;
+
+namespace CSharp_TrayShortcut.Helpers
 {
     /// <summary>
     /// Help manage Icons
@@ -15,6 +17,14 @@
             if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
             {
                 return null;
+            }
+            if (Path.GetExtension(filePath) == ".lnk")
+            {
+                var target = GetShortcutTargetFile(filePath);
+                if (!string.IsNullOrWhiteSpace(target) && File.Exists(target))
+                {
+                    return Icon.ExtractAssociatedIcon(target)?.ToBitmap();
+                }
             }
             return Icon.ExtractAssociatedIcon(filePath)?.ToBitmap();
         }
@@ -53,6 +63,29 @@
                 return new Icon(Path.Combine("Ressources", path));
             }
             return null;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="shortcutFilename"></param>
+        /// <returns></returns>
+        /// <remarks>Source: https://stackoverflow.com/a/9414495</remarks>
+        private static string GetShortcutTargetFile(string shortcutFilename)
+        {
+            string pathOnly = System.IO.Path.GetDirectoryName(shortcutFilename);
+            string filenameOnly = System.IO.Path.GetFileName(shortcutFilename);
+
+            Shell shell = new Shell();
+            Folder folder = shell.NameSpace(pathOnly);
+            FolderItem folderItem = folder.ParseName(filenameOnly);
+            if (folderItem != null)
+            {
+                Shell32.ShellLinkObject link = (Shell32.ShellLinkObject)folderItem.GetLink;
+                return link.Path;
+            }
+
+            return string.Empty;
         }
     }
 }

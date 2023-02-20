@@ -59,9 +59,12 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.x'
+
+      # - name: Install dependencies
+      #   run: dotnet restore ./"CSharp TrayShortcut"
         
       - name: Build
-        run: msbuild ./"CSharp TrayShortcut" -property:Configuration=Release /tv:7.0 /p:TargetFrameworkVersion=v7.0
+        run: msbuild ./"CSharp TrayShortcut" -property:Configuration=Release
 
       # ℹ️ Command-line programs to run using the OS shell.
       # 📚 https://git.io/JvXDl

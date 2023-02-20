@@ -64,7 +64,7 @@ jobs:
         run: dotnet restore ./"CSharp TrayShortcut"
         
       - name: Build
-        run: dotnet build ./"CSharp TrayShortcut" --configuration Release --no-restore
+        run: dotnet msbuild ./"CSharp TrayShortcut" --configuration Release --no-restore
 
       # ℹ️ Command-line programs to run using the OS shell.
       # 📚 https://git.io/JvXDl

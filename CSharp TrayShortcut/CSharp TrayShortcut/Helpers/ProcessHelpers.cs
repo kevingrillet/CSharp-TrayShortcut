@@ -27,6 +27,11 @@ namespace CSharp_TrayShortcut.Helpers
                 throw new ApplicationException("Path is required.");
             }
 
+            if (!File.Exists((sender as CustomToolStripMenuItem).Path))
+            {
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace((sender as CustomToolStripMenuItem).Argument))
             {
                 Process.Start(new ProcessStartInfo((sender as CustomToolStripMenuItem).Path)

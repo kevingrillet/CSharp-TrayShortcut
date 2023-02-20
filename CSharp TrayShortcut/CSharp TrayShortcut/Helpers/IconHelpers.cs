@@ -12,7 +12,7 @@
         /// <returns>Bitmap of ICO extracted</returns>
         public static Bitmap ExtractIconToBitmap(string filePath)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
             {
                 return null;
             }

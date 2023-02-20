@@ -28,7 +28,7 @@
         /// <summary>
         /// Force shot root files
         /// </summary>
-        public bool ShowRootFiles { get; set; }
+        public bool? ShowRootFiles { get; set; }
 
         public Settings()
         {

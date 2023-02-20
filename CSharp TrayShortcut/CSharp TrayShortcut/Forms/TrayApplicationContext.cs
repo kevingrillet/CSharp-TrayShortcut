@@ -113,7 +113,7 @@ namespace CSharp_TrayShortcut.Forms
                 }
             }
 
-            if (parent != null || _settings.ShowRootFiles)
+            if (parent != null || (_settings.ShowRootFiles ?? true))
             {
                 var files = Directory.GetFiles(path);
                 foreach (var f in files)

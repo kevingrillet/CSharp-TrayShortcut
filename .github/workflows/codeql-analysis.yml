@@ -60,11 +60,11 @@ jobs:
         with:
           dotnet-version: '7.x'
           
-      - name: Install dependencies
-        run: dotnet restore ./"CSharp TrayShortcut"
+      # - name: Install dependencies
+      #   run: dotnet restore ./"CSharp TrayShortcut"
         
       - name: Build
-        run: dotnet msbuild ./"CSharp TrayShortcut" -property:Configuration=Release
+        run: msbuild ./"CSharp TrayShortcut" -property:Configuration=Release
 
       # ℹ️ Command-line programs to run using the OS shell.
       # 📚 https://git.io/JvXDl

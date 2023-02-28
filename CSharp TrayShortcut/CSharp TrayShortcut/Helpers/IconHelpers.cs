@@ -76,7 +76,7 @@ namespace CSharp_TrayShortcut.Helpers
             string pathOnly = System.IO.Path.GetDirectoryName(shortcutFilename);
             string filenameOnly = System.IO.Path.GetFileName(shortcutFilename);
 
-            Shell shell = new Shell();
+            Shell shell = new();
             Folder folder = shell.NameSpace(pathOnly);
             FolderItem folderItem = folder.ParseName(filenameOnly);
             if (folderItem != null)

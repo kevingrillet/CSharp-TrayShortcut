@@ -6,7 +6,7 @@ namespace CSharp_TrayShortcut.Helpers
     /// Help Load/Save Json.
     /// </summary>
     /// <typeparam name="TType"></typeparam>
-    internal static class JsonHelpers<TType>
+    internal static class JsonHelpers<TType> where TType : class, new()
     {
         /// <summary>
         /// Deserialise from path into TType

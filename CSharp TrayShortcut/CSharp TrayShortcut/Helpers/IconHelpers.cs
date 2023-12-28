@@ -66,10 +66,10 @@ namespace CSharp_TrayShortcut.Helpers
         }
 
         /// <summary>
-        ///
+        /// Get file path from shortcut
         /// </summary>
-        /// <param name="shortcutFilename"></param>
-        /// <returns></returns>
+        /// <param name="shortcutFilename">Shortcut file</param>
+        /// <returns>File path of shortcut</returns>
         /// <remarks>Source: https://stackoverflow.com/a/9414495</remarks>
         private static string GetShortcutTargetFile(string shortcutFilename)
         {

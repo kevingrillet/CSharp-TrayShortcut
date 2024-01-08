@@ -35,10 +35,7 @@ namespace CSharp_TrayShortcut.Helpers
             {
                 throw new ArgumentNullException(nameof(pathConfig));
             }
-            if (config == null)
-            {
-                throw new ArgumentNullException(nameof(config));
-            }
+            ArgumentNullException.ThrowIfNull(config);
             File.WriteAllText(pathConfig, JsonConvert.SerializeObject(config));
         }
     }

@@ -52,7 +52,7 @@ namespace CSharp_TrayShortcut.Forms
         /// <param name="contextMenuStrip">root contextMenu</param>
         private void GenerateCustomsMenu(ContextMenuStrip contextMenuStrip)
         {
-            if (!_settings.CustomShortcuts.Any())
+            if (_settings.CustomShortcuts.Count == 0)
                 return;
 
             var menuItem = new ToolStripMenuItem

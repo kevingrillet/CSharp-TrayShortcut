@@ -81,7 +81,7 @@ namespace CSharp_TrayShortcut.Helpers
             FolderItem folderItem = folder.ParseName(filenameOnly);
             if (folderItem != null)
             {
-                Shell32.ShellLinkObject link = (Shell32.ShellLinkObject)folderItem.GetLink;
+                ShellLinkObject link = (ShellLinkObject)folderItem.GetLink;
                 return link.Path;
             }
 

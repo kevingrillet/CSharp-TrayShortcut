@@ -1,5 +1,7 @@
 ﻿using CSharp_TrayShortcut.Forms;
+using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace CSharp_TrayShortcut.Helpers
 {

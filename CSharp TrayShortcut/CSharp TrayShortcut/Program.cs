@@ -1,22 +1,28 @@
 using CSharp_TrayShortcut.Forms;
+using System;
+using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace CSharp_TrayShortcut
 {
     internal static class Program
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0063:Utiliser une instruction 'using' simple", Justification = "<En attente>")]
         private static void CatchException
             (object sender, ThreadExceptionEventArgs e)
         {
             try
             {
-                StreamWriter sw = new("crash-" + DateTime.Now.ToString().Replace("/", "-").Replace(":", "-") + ".txt");
-                Exception ex = e.Exception;
-                sw.WriteLine(ex.Message + ex.StackTrace);
-                sw.Close();
+                using (StreamWriter sw = new("crash-" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH-mm-ss") + ".txt"))
+                {
+                    Exception ex = e.Exception;
+                    sw.WriteLine(ex.Message + ex.StackTrace);
+                }
             }
             finally
             {
-                Application.Exit();
+                Environment.Exit(0);
             }
         }
 
@@ -24,8 +30,9 @@ namespace CSharp_TrayShortcut
         private static void Main()
         {
             ApplicationConfiguration.Initialize();
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            Application.ThreadException += CatchException;
             Application.Run(new TrayApplicationContext());
-            Application.ThreadException += new ThreadExceptionEventHandler(CatchException);
         }
     }
 }

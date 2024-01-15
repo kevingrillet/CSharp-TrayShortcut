@@ -1,4 +1,6 @@
-﻿namespace CSharp_TrayShortcut.Forms
+﻿using System.Windows.Forms;
+
+namespace CSharp_TrayShortcut.Forms
 {
     partial class EditForm
     {

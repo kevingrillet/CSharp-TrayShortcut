@@ -1,4 +1,6 @@
 ﻿using Shell32;
+using System.Drawing;
+using System.IO;
 
 namespace CSharp_TrayShortcut.Helpers
 {

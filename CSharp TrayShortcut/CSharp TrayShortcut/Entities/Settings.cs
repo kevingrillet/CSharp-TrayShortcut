@@ -1,4 +1,6 @@
-﻿namespace CSharp_TrayShortcut.Entities
+﻿using System.Collections.Generic;
+
+namespace CSharp_TrayShortcut.Entities
 {
     /// <summary>
     /// Entity used to save / load from config.json

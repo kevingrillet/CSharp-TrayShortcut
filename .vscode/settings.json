@@ -7,6 +7,7 @@
     "markdownlint.config": {
         "default": true,
         "MD033": false, // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md033
-        "MD041": false  // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md041
+        "MD041": false, // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md041
+        "MD045": false  // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md045
     }
 }

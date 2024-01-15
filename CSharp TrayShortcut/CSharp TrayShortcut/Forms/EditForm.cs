@@ -1,7 +1,10 @@
 ﻿using CSharp_TrayShortcut.Entities;
 using CSharp_TrayShortcut.Helpers;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace CSharp_TrayShortcut.Forms
 {

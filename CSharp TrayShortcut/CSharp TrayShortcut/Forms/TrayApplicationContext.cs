@@ -1,6 +1,11 @@
 ﻿using CSharp_TrayShortcut.Entities;
 using CSharp_TrayShortcut.Helpers;
 using Microsoft.VisualBasic;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace CSharp_TrayShortcut.Forms
 {

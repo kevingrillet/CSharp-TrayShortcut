@@ -24,23 +24,25 @@
 
 # C# TrayShortcut
 
-Petite expérimentation avec les TrayIcon pour remplacer les barres d'outils.
+## 🇫🇷 Description
 
-## Configuration
+Petite expérimentation avec les **TrayIcons** pour remplacer les barres d'outils.
 
-Modifier dans `Configuration\config.json`:
+## 🇫🇷 Configuration
 
-- `CustomShortcuts` ajoutera des éléments qui ne sont pas dans le dossier dans une catégorie séparée:
-  - `Argument` argument à ajouter au lien à exécuter
-  - `Image` icone qui sera à côté (nécessite un `.ico`), si `null` sera remplacé par l'icone du `Path`
-  - `Path` lien à exécuter
-  - `Text` nom affiché
-- `Path` du dossier désiré
-- `PathFolderIcon` sera l'icone utilisée pour les dossiers (nécessite un `.ico`)
-- `PathTrayIcon` sera l'icone utilisée pour l'application (nécessite un `.ico`)
-- `ShowRootFiles` `true` ou `false` pour dire si on veut voir les fichiers au niveau du `Path`.
+Modifier dans `Configuration\config.json` :
 
-Exemple:
+- `CustomShortcuts` ajoute des éléments personnalisés qui ne sont pas dans le dossier, dans une catégorie séparée :
+  - `Argument` : argument à ajouter à la commande exécutée  
+  - `Image` : icône affichée à côté (fichier `.ico` requis). Si `null`, l’icône du `Path` sera utilisée  
+  - `Path` : lien ou exécutable à lancer  
+  - `Text` : nom affiché dans le menu  
+- `Path` : chemin du dossier à afficher  
+- `PathFolderIcon` : icône utilisée pour les dossiers (`.ico` requis)  
+- `PathTrayIcon` : icône utilisée pour l’application (`.ico` requis)  
+- `ShowRootFiles` : `true` ou `false` pour indiquer si les fichiers à la racine du dossier doivent être visibles.  
+
+#### 🇫🇷 Exemple
 
 ```json
 {
@@ -59,10 +61,10 @@ Exemple:
 }
 ```
 
-## Licence
+## 🇫🇷 Licence
 
 ```text
- /*
+/*
  * ----------------------------------------------------------------------------
  * "LICENCE BEERWARE" (Révision 42):
  * kevingrillet a créé ce fichier. Tant que vous conservez cet avertissement,
@@ -72,6 +74,60 @@ Exemple:
  * ----------------------------------------------------------------------------
  */
 ```
+
+---
+
+## 🇬🇧 Description
+
+A small experiment using **TrayIcons** as a replacement for traditional toolbars.
+
+## 🇬🇧 Configuration
+
+Edit `Configuration\config.json`:
+
+- `CustomShortcuts` adds custom items not found in the folder, grouped in a separate category:
+  - `Argument`: optional argument to append when executing the target  
+  - `Image`: icon displayed next to the item (requires a `.ico` file). If `null`, the icon from `Path` will be used  
+  - `Path`: path or executable to launch  
+  - `Text`: label shown in the menu  
+- `Path`: desired folder path  
+- `PathFolderIcon`: icon used for folders (requires `.ico`)  
+- `PathTrayIcon`: icon used for the application (requires `.ico`)  
+- `ShowRootFiles`: `true` or `false` to show files at the root of `Path`.  
+
+#### 🇬🇧 Example
+
+```json
+{
+    "CustomShortcuts": [
+        {
+            "Argument": null,
+            "Image": null,
+            "Path": "C:\\Program Files (x86)\\Notepad++\\notepad++.exe",
+            "Text": "Notepad++"
+        }
+    ],
+    "Path": "D:\\Users\\kevin\\Toolbar",
+    "PathFolderIcon": "folder_w10.ico",
+    "PathTrayIcon": "icon.ico",
+    "ShowRootFiles": true
+}
+```
+
+### 🇬🇧 License
+
+```text
+/*
+ * ----------------------------------------------------------------------------
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * kevingrillet wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a beer in return Poul-Henning Kamp
+ * ----------------------------------------------------------------------------
+ */
+```
+
+---
 
 <div align="center">
    <a href="https://github.com/kyechan99/capsule-render">

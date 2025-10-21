@@ -81,10 +81,10 @@ namespace CSharp_TrayShortcut.Forms
                 menuItem.DropDownItems.Add(subMenuItem);
             }
 
-            contextMenuStrip.Items.AddRange(new ToolStripItem[] {
+            contextMenuStrip.Items.AddRange([
                     new ToolStripSeparator(),
                     menuItem,
-                });
+                ]);
         }
 
         /// <summary>
@@ -176,12 +176,12 @@ namespace CSharp_TrayShortcut.Forms
             GenerateCustomsMenu(contextMenuStrip);
 
             // Static bottom menus
-            contextMenuStrip.Items.AddRange(new ToolStripItem[] {
+            contextMenuStrip.Items.AddRange([
                     new ToolStripSeparator(),
                     new ToolStripMenuItem(nameof(Refresh), null, new EventHandler(Refresh)),
                     new ToolStripMenuItem(nameof(Edit), null, new EventHandler(Edit)),
                     new ToolStripMenuItem(nameof(Exit), null, new EventHandler(Exit)),
-                });
+                ]);
         }
     }
 }

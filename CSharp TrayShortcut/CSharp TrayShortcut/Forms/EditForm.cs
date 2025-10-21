@@ -98,7 +98,7 @@ namespace CSharp_TrayShortcut.Forms
             dataGridView.CurrentCell = null;
 
             // Remove empty path, replace empty with null
-            _settings.CustomShortcuts = bindingList.AsEnumerable()
+            _settings.CustomShortcuts = [.. bindingList.AsEnumerable()
                 .Where(cs => !string.IsNullOrWhiteSpace(cs.Path))
                 .Select(cs => new CustomShortcuts
                 {
@@ -106,8 +106,7 @@ namespace CSharp_TrayShortcut.Forms
                     Image = string.IsNullOrWhiteSpace(cs.Image) ? null : cs.Image,
                     Path = cs.Path,
                     Text = string.IsNullOrWhiteSpace(cs.Text) ? null : cs.Text,
-                })
-                .ToList();
+                })];
             JsonHelpers<Settings>.Save(_pathConfig, _settings);
             Close();
         }

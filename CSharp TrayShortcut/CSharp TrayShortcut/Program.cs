@@ -8,17 +8,14 @@ namespace CSharp_TrayShortcut
 {
     internal static class Program
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0063:Utiliser une instruction 'using' simple", Justification = "<En attente>")]
         private static void CatchException
             (object sender, ThreadExceptionEventArgs e)
         {
             try
             {
-                using (StreamWriter sw = new("crash-" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH-mm-ss") + ".txt"))
-                {
-                    Exception ex = e.Exception;
-                    sw.WriteLine(ex.Message + ex.StackTrace);
-                }
+                using StreamWriter sw = new("crash-" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH-mm-ss") + ".txt");
+                Exception ex = e.Exception;
+                sw.WriteLine(ex.Message + ex.StackTrace);
             }
             finally
             {

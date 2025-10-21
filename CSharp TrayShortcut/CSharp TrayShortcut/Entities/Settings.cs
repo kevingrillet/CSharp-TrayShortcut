@@ -10,7 +10,7 @@ namespace CSharp_TrayShortcut.Entities
         /// <summary>
         /// List of custom shortcuts
         /// </summary>
-        public List<CustomShortcuts> CustomShortcuts { get; set; }
+        public List<CustomShortcuts> CustomShortcuts { get; set; } = [];
 
         /// <summary>
         /// Path of the folder you want to get shortcut from
@@ -31,10 +31,5 @@ namespace CSharp_TrayShortcut.Entities
         /// Force shot root files
         /// </summary>
         public bool? ShowRootFiles { get; set; }
-
-        public Settings()
-        {
-            CustomShortcuts = [];
-        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Shell32;
+﻿using System;
 using System.Drawing;
 using System.IO;
 
@@ -20,15 +20,23 @@ namespace CSharp_TrayShortcut.Helpers
             {
                 return null;
             }
-            if (Path.GetExtension(filePath) == ".lnk")
+            try
             {
-                var target = GetShortcutTargetFile(filePath);
-                if (!string.IsNullOrWhiteSpace(target) && File.Exists(target))
+                if (Path.GetExtension(filePath) == ".lnk")
                 {
-                    return Icon.ExtractAssociatedIcon(target)?.ToBitmap();
+                    var target = GetShortcutTargetFile(filePath);
+                    if (!string.IsNullOrWhiteSpace(target) && File.Exists(target))
+                    {
+                        return Icon.ExtractAssociatedIcon(target)?.ToBitmap();
+                    }
                 }
+                return Icon.ExtractAssociatedIcon(filePath)?.ToBitmap();
             }
-            return Icon.ExtractAssociatedIcon(filePath)?.ToBitmap();
+            catch (Exception)
+            {
+                // Corrupt icon, path too long, COM/shell failure... no icon is fine.
+                return null;
+            }
         }
 
         /// <summary>
@@ -56,13 +64,20 @@ namespace CSharp_TrayShortcut.Helpers
             {
                 return null;
             }
-            if (File.Exists(path))
+            try
             {
-                return new Icon(path);
+                if (File.Exists(path))
+                {
+                    return new Icon(path);
+                }
+                else if (File.Exists(Path.Combine("Ressources", path)))
+                {
+                    return new Icon(Path.Combine("Ressources", path));
+                }
             }
-            else if (File.Exists(Path.Combine("Ressources", path)))
+            catch (Exception)
             {
-                return new Icon(Path.Combine("Ressources", path));
+                // Invalid / corrupt .ico file: fall back to no icon.
             }
             return null;
         }
@@ -72,22 +87,9 @@ namespace CSharp_TrayShortcut.Helpers
         /// </summary>
         /// <param name="shortcutFilename">Shortcut file</param>
         /// <returns>File path of shortcut</returns>
-        /// <remarks>Source: https://stackoverflow.com/a/9414495</remarks>
         private static string GetShortcutTargetFile(string shortcutFilename)
         {
-            string pathOnly = Path.GetDirectoryName(shortcutFilename);
-            string filenameOnly = Path.GetFileName(shortcutFilename);
-
-            Shell shell = new();
-            Folder folder = shell.NameSpace(pathOnly);
-            FolderItem folderItem = folder.ParseName(filenameOnly);
-            if (folderItem != null)
-            {
-                ShellLinkObject link = (ShellLinkObject)folderItem.GetLink;
-                return link.Path;
-            }
-
-            return string.Empty;
+            return ShellLinkHelper.ResolveTarget(shortcutFilename);
         }
     }
 }

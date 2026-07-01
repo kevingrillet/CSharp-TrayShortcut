@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
-using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace CSharp_TrayShortcut.Helpers
 {
@@ -11,11 +10,17 @@ namespace CSharp_TrayShortcut.Helpers
     /// <typeparam name="TType">The type of object to load or save.</typeparam>
     internal static class JsonHelpers<TType> where TType : class, new()
     {
+        private static readonly JsonSerializerOptions _options = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = true,
+        };
+
         /// <summary>
         /// Deserialise from path into TType
         /// </summary>
         /// <param name="pathConfig">Path to config file</param>
-        /// <returns>Deserialized object</returns>
+        /// <returns>Deserialized object, or null if the file is missing or unreadable</returns>
         /// <exception cref="ArgumentNullException">pathConfig is required</exception>
         public static TType Load(string pathConfig)
         {
@@ -24,13 +29,19 @@ namespace CSharp_TrayShortcut.Helpers
                 throw new ArgumentNullException(nameof(pathConfig));
             }
 
-            if (File.Exists(pathConfig))
-            {
-                return JsonConvert.DeserializeObject<TType>(File.ReadAllText(pathConfig));
-            }
-            else
+            if (!File.Exists(pathConfig))
             {
                 // Handle file not found error
+                return null;
+            }
+
+            try
+            {
+                return JsonSerializer.Deserialize<TType>(File.ReadAllText(pathConfig), _options);
+            }
+            catch (Exception ex) when (ex is JsonException or IOException)
+            {
+                // Corrupt or unreadable config: fall back to defaults.
                 return null;
             }
         }
@@ -50,11 +61,8 @@ namespace CSharp_TrayShortcut.Helpers
 
             ArgumentNullException.ThrowIfNull(config);
 
-            string serializedConfig = JsonConvert.SerializeObject(config);
-            if (serializedConfig != null)
-            {
-                File.WriteAllBytes(pathConfig, Encoding.UTF8.GetBytes(serializedConfig));
-            }
+            string serializedConfig = JsonSerializer.Serialize(config, _options);
+            File.WriteAllText(pathConfig, serializedConfig);
         }
     }
 }

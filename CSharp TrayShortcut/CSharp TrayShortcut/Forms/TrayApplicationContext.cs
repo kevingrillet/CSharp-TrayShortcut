@@ -1,4 +1,4 @@
-﻿using CSharp_TrayShortcut.Entities;
+using CSharp_TrayShortcut.Entities;
 using CSharp_TrayShortcut.Helpers;
 using Microsoft.VisualBasic;
 using System;
@@ -75,7 +75,7 @@ namespace CSharp_TrayShortcut.Forms
                         ? IconHelpers.IconPathToBitmap(c.Image)
                         : IconHelpers.ExtractIconToBitmap(c.Path),
                     Path = c.Path,
-                    Text = Path.GetFileNameWithoutExtension(c.Text),
+                    Text = c.Text,
                 };
                 subMenuItem.Click += new EventHandler(ProcessHelpers.Run);
                 menuItem.DropDownItems.Add(subMenuItem);
@@ -88,40 +88,45 @@ namespace CSharp_TrayShortcut.Forms
         }
 
         /// <summary>
-        /// Generate Menus from path, will create all subMenus if folder found
+        /// Generate the root menu. Sub-folders are populated lazily when opened
+        /// (see <see cref="PopulateDirectory"/> / <see cref="LazyPopulate"/>) so that
+        /// startup only enumerates the first level instead of the whole tree.
         /// </summary>
         /// <param name="contextMenuStrip">root contextMenu</param>
-        /// <param name="path">if null = _settings.Path</param>
-        /// <param name="parent">to create subMenus</param>
-        private void GenerateMenu(ContextMenuStrip contextMenuStrip, string path = null, ToolStripMenuItem parent = null)
+        private void GenerateMenu(ContextMenuStrip contextMenuStrip)
         {
-            path ??= _settings.Path;
+            PopulateDirectory(contextMenuStrip.Items, _settings.Path, isRoot: true);
+        }
 
-            var directories = Directory.GetDirectories(path);
-            foreach (var d in directories)
+        /// <summary>
+        /// Populate a menu collection with the directories and files found at
+        /// <paramref name="path"/>. Sub-directories get a placeholder + lazy handler so
+        /// their own content is only built the first time they are opened.
+        /// </summary>
+        /// <param name="items">collection to fill</param>
+        /// <param name="path">directory to enumerate</param>
+        /// <param name="isRoot">at root, files are only shown when ShowRootFiles is set</param>
+        private void PopulateDirectory(ToolStripItemCollection items, string path, bool isRoot)
+        {
+            foreach (var d in SafeEnumerate(() => Directory.GetDirectories(path)))
             {
                 var menuItem = new ToolStripMenuItem
                 {
                     Image = _folderIcon,
                     Text = Path.GetFileName(d),
+                    Tag = d,
                 };
 
-                GenerateMenu(contextMenuStrip, d, menuItem);
+                // Placeholder so the expand arrow is shown; replaced on first open.
+                menuItem.DropDownItems.Add(new ToolStripMenuItem());
+                menuItem.DropDownOpening += LazyPopulate;
 
-                if (parent == null)
-                {
-                    contextMenuStrip.Items.Add(menuItem);
-                }
-                else
-                {
-                    parent.DropDownItems.Add(menuItem);
-                }
+                items.Add(menuItem);
             }
 
-            if (parent != null || (_settings.ShowRootFiles ?? true))
+            if (!isRoot || (_settings.ShowRootFiles ?? true))
             {
-                var files = Directory.GetFiles(path);
-                foreach (var f in files)
+                foreach (var f in SafeEnumerate(() => Directory.GetFiles(path)))
                 {
                     var subMenuItem = new CustomToolStripMenuItem
                     {
@@ -130,15 +135,60 @@ namespace CSharp_TrayShortcut.Forms
                         Text = Path.GetFileNameWithoutExtension(f),
                     };
                     subMenuItem.Click += new EventHandler(ProcessHelpers.Run);
+                    items.Add(subMenuItem);
+                }
+            }
+        }
 
-                    if (parent == null)
-                    {
-                        contextMenuStrip.Items.Add(subMenuItem);
-                    }
-                    else
-                    {
-                        parent.DropDownItems.Add(subMenuItem);
-                    }
+        /// <summary>
+        /// Builds a directory sub-menu on first open, then unsubscribes so it is built once.
+        /// </summary>
+        private void LazyPopulate(object sender, EventArgs e)
+        {
+            if (sender is not ToolStripMenuItem menuItem || menuItem.Tag is not string path)
+                return;
+
+            menuItem.DropDownOpening -= LazyPopulate;
+            menuItem.DropDownItems.Clear(); // remove placeholder
+            PopulateDirectory(menuItem.DropDownItems, path, isRoot: false);
+        }
+
+        /// <summary>
+        /// Run an enumeration that touches the file system, swallowing access/IO errors
+        /// (inaccessible folder, disconnected network drive, deleted directory...) so a
+        /// single bad folder never takes the whole application down.
+        /// </summary>
+        private static string[] SafeEnumerate(Func<string[]> enumerate)
+        {
+            try
+            {
+                return enumerate();
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Security.SecurityException)
+            {
+                return [];
+            }
+        }
+
+        /// <summary>
+        /// Dispose every image held by the menu items (recursively), skipping the shared
+        /// folder icon which is disposed separately. Prevents GDI handle leaks on refresh.
+        /// </summary>
+        private static void DisposeMenuImages(ToolStripItemCollection items, Image skip)
+        {
+            if (items == null)
+                return;
+
+            foreach (ToolStripItem item in items)
+            {
+                if (item.Image != null && !ReferenceEquals(item.Image, skip))
+                {
+                    item.Image.Dispose();
+                }
+
+                if (item is ToolStripMenuItem menuItem && menuItem.HasDropDownItems)
+                {
+                    DisposeMenuImages(menuItem.DropDownItems, skip);
                 }
             }
         }
@@ -148,30 +198,36 @@ namespace CSharp_TrayShortcut.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        /// <exception cref="ApplicationException">If _settings.Path does not exists, BOOM!</exception>
         private void Refresh(object sender, EventArgs e)
         {
-            // Load config file
-            _settings = JsonHelpers<Settings>.Load(_pathConfig);
+            // Load config file (fall back to defaults if missing or unreadable)
+            _settings = JsonHelpers<Settings>.Load(_pathConfig) ?? new Settings();
 
             // Check if Path Exists
-            while (!Path.Exists(_settings.Path))
+            while (string.IsNullOrWhiteSpace(_settings.Path) || !Path.Exists(_settings.Path))
             {
                 _settings.Path = Interaction.InputBox("Please enter folder path", $"Path does not exist: {_settings.Path}");
                 JsonHelpers<Settings>.Save(_pathConfig, _settings);
             }
 
-            // Load icons
+            var contextMenuStrip = _notificationIcon.ContextMenuStrip;
+
+            // Dispose old menu images (skip current folder icon, disposed just below).
+            DisposeMenuImages(contextMenuStrip.Items, _folderIcon);
+            contextMenuStrip.Items.Clear();
+
+            // Load folder icon (dispose previous one first).
+            _folderIcon?.Dispose();
             _folderIcon = IconHelpers.IconPathToBitmap(_settings.PathFolderIcon)
                 ?? IconHelpers.IconPathToBitmap(_defaultPathFolderIcon);
 
-            // Set Tray icon
+            // Set Tray icon (dispose previous one).
+            var previousTrayIcon = _notificationIcon.Icon;
             _notificationIcon.Icon = IconHelpers.SetIcon(_settings.PathTrayIcon)
                 ?? IconHelpers.SetIcon(_defaultPathTrayIcon);
+            previousTrayIcon?.Dispose();
 
             // Update menus
-            var contextMenuStrip = _notificationIcon.ContextMenuStrip;
-            contextMenuStrip.Items.Clear();
             GenerateMenu(contextMenuStrip);
             GenerateCustomsMenu(contextMenuStrip);
 
@@ -182,6 +238,22 @@ namespace CSharp_TrayShortcut.Forms
                     new ToolStripMenuItem(nameof(Edit), null, new EventHandler(Edit)),
                     new ToolStripMenuItem(nameof(Exit), null, new EventHandler(Exit)),
                 ]);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_notificationIcon != null)
+                {
+                    DisposeMenuImages(_notificationIcon.ContextMenuStrip?.Items, _folderIcon);
+                    _notificationIcon.Icon?.Dispose();
+                    _notificationIcon.Dispose();
+                }
+                _folderIcon?.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

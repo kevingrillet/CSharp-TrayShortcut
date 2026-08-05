@@ -1,13 +1,59 @@
 {
-    "editor.rulers": [
-        80, // Terminal windows
-        125 // GitHub diff view
-    ],
-    // Extension - markdownlint > https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
-    "markdownlint.config": {
-        "default": true,
-        "MD033": false, // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md033
-        "MD041": false, // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md041
-        "MD045": false  // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md045
-    }
+  // Réglages partagés du dépôt (versionnés volontairement : ils font partie du projet).
+
+  // La solution est au format .slnx : sans cette ligne, l'extension C# demande à chaque
+  // ouverture quelle solution charger.
+  "dotnet.defaultSolution": "CSharp-TrayShortcut.slnx",
+
+  // Cohérent avec .editorconfig et .gitattributes (CRLF partout, sauf les .sh).
+  "files.eol": "\r\n",
+  "files.encoding": "utf8",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "modificationsIfAvailable",
+  "omnisharp.enableEditorConfigSupport": true,
+
+  "editor.rulers": [
+    80, // Fenêtres de terminal
+    125 // Vue des diffs GitHub
+  ],
+
+  // Les dossiers générés polluent la recherche et l'explorateur.
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true
+  },
+  "search.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+    "**/TestResults": true,
+    "**/publish": true
+  },
+  "files.watcherExclude": {
+    "**/bin/**": true,
+    "**/obj/**": true
+  },
+
+  // Les .feature sont du Gherkin francophone.
+  "files.associations": {
+    "*.feature": "feature"
+  },
+  "cucumberautocomplete.steps": ["docs/features/*.feature"],
+  "cucumberautocomplete.syncfeatures": "docs/features/*.feature",
+
+  // Schémas YAML des pipelines : validation à la frappe.
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml",
+    "https://json.schemastore.org/dependabot-2.0.json": ".github/dependabot.yml"
+  },
+
+  // Extension - markdownlint > https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
+  "markdownlint.config": {
+    "default": true,
+    "MD013": false, // Longueur de ligne : les tableaux de doc dépassent légitimement.
+    "MD033": false, // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md033
+    "MD041": false, // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md041
+    "MD045": false // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md045
+  }
 }

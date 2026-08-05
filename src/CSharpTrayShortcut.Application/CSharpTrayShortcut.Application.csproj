@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Couche APPLICATION : cas d'usage, règles de composition du menu, validation de la
+    configuration, catalogue de textes, et les PORTS (Abstractions/) que l'infrastructure
+    implémente.
+
+    Ne référence que le domaine et les abstractions de Microsoft.Extensions : rien qui
+    touche au disque, au shell ou à WinForms. Cibler net9.0 (et non net9.0-windows) n'est
+    pas cosmétique — c'est ce qui fait échouer la compilation si un « using
+    System.Windows.Forms » se glisse ici.
+  -->
+  <PropertyGroup>
+    <RootNamespace>CSharpTrayShortcut.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CSharpTrayShortcut.Domain\CSharpTrayShortcut.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
+  </ItemGroup>
+
+</Project>

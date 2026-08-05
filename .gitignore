@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Rapports de tests (dotnet test --logger trx --results-directory TestResults)
+TestResults/

@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Débogage de l'application résidente. Elle n'ouvre aucune fenêtre au démarrage :
+      // l'icône apparaît dans la zone de notification, éventuellement derrière la flèche
+      // des icônes masquées. Le menu se déploie au clic droit.
+      "name": "Tray Shortcut (débogage)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/CSharpTrayShortcut.Ui/bin/Debug/net9.0-windows/TrayShortcut.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/CSharpTrayShortcut.Ui",
+      "console": "internalConsole",
+      "stopAtEntry": false
+    },
+    {
+      // Attache le débogueur à une instance déjà lancée (utile pour observer la
+      // construction paresseuse d'un sous-menu sans redémarrer l'application).
+      "name": "Attacher à un processus",
+      "type": "coreclr",
+      "request": "attach"
+    }
+  ]
+}

@@ -180,7 +180,7 @@ dotnet test CSharp-TrayShortcut.slnx
 dotnet test CSharp-TrayShortcut.slnx --filter TestCategory=SPEC-MENU-003
 ```
 
-92 tests, une centaine de millisecondes, sans écran ni disque. Chaque comportement porte un
+Toute la suite tourne en une centaine de millisecondes, sans écran ni disque. Chaque comportement porte un
 identifiant qui relie sa **spec** ([`docs/specs/`](docs/specs/)), son **scénario Gherkin**
 ([`docs/features/`](docs/features/)), son **test** et sa ligne de
 [traçabilité](docs/TRACEABILITE.md).

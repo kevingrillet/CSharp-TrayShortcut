@@ -10,6 +10,12 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et le ve
 > ligne dans `[Non publié]`, en même temps que la spec et le scénario Gherkin correspondants. La
 > checklist de `.github/pull_request_template.md` le rappelle.
 
+> **Publier une version** : la section `[Non publié]` porte le numéro annoncé par `<Version>` dans
+> `Directory.Build.props` — **1.0.0** aujourd'hui. Publier, c'est renommer cette section en
+> `[1.0.0] — <date>`, ouvrir une nouvelle section `[Non publié]`, monter `<Version>` au numéro
+> suivant, puis pousser le tag `v1.0.0` : c'est ce tag qui déclenche `release.yml` et qui fixe la
+> version du binaire livré.
+
 ## [Non publié]
 
 Refonte complète de la structure du projet. Le comportement visible change peu ; ce qui change,

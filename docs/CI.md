@@ -11,10 +11,20 @@ exactement les mêmes contrôles sur un poste de développement.
 | --- | --- | --- |
 | `.github/workflows/ci.yml` | `push` et `pull_request` sur `main` / `master` | Compilation Release, tests unitaires, contrôle de mise en forme |
 | `.github/workflows/release.yml` | poussée d'un tag `v*` | Publication `win-x64`, archive ZIP, release GitHub |
-| `.github/workflows/codeql-analysis.yml` | planifié et sur `push` | Analyse statique de sécurité |
-| `.github/workflows/links.yml` | planifié | Vérification des liens de la documentation |
+| `.github/workflows/codeql-analysis.yml` | `push` et `pull_request` sur `main`, plus le dimanche | Analyse statique de sécurité (CodeQL, C#) |
+| `.github/workflows/links.yml` | modification d'un `*.md`, plus le dimanche | Liens **internes** de la documentation (mode hors ligne) |
 | `.github/dependabot.yml` | hebdomadaire (lundi 06:00, Europe/Paris) | Mises à jour des paquets NuGet et des actions |
-| `.github/workflows/dependabot-auto-merge.yml` | sur PR Dependabot | Fusion automatique des montées de version mineures validées par la CI |
+| `.github/workflows/dependabot-auto-merge.yml` | sur PR Dependabot | Fusion automatique des montées **patch** et **mineures** uniquement ; une majeure attend une relecture |
+
+Deux précisions qui ont leur importance :
+
+* CodeQL compile la solution **explicitement** (`build-mode: manual`) au lieu de s'en
+  remettre à `autobuild` : le format `.slnx` exige un SDK ≥ 9.0.200, qu'il faut donc
+  installer soi-même plutôt que d'espérer celui du runner.
+* La fusion automatique repose sur `gh pr merge --auto`, qui attend les **contrôles
+  requis** de la branche. Sans protection de branche exigeant les tâches de `ci.yml`,
+  GitHub fusionne dès que la pull request est fusionnable — donc potentiellement avant
+  la fin de la CI.
 
 ---
 
@@ -31,12 +41,13 @@ Quatre contrôles, ni plus ni moins :
 3. **`dotnet format --verify-no-changes`** — le code respecte le `.editorconfig` (indentation, fins
    de ligne, espaces, tri des `using`). Cette vérification tourne dans une tâche séparée : un rouge
    ici signifie « reformate », pas « le code est cassé ».
-4. **`dotnet test -c Release`** — les 92 tests NUnit du domaine et de la couche application passent.
+4. **`dotnet test -c Release`** — les tests NUnit du domaine et de la couche application passent.
    Le rapport `.trx` est publié en artefact, y compris — et surtout — quand les tests échouent.
 
-Parmi ces 92 tests, quatre sont des **garde-fous de documentation** plutôt que de comportement : ils
-comparent les étiquettes des scénarios Gherkin aux catégories des tests, dans les deux sens, et
-vérifient la parité des deux langues. Une documentation qui dérive fait donc rougir la CI.
+Parmi eux, quatre ne vérifient pas un comportement mais la **documentation elle-même**
+(`Features/FeatureCoverageTests.cs`) : ils comparent les étiquettes des scénarios Gherkin aux
+catégories des tests, dans les deux sens. La parité des deux langues est tenue de la même façon,
+par les tests de `Text/TextCatalogueTests.cs`. Une documentation qui dérive fait donc rougir la CI.
 
 Ce que la CI **ne** vérifie **pas** : le rendu du menu WinForms, l'extraction d'icônes, le mutex
 d'instance unique, l'écriture dans le dossier de données. Ces couches n'ont pas de tests

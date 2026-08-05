@@ -24,8 +24,9 @@ Quatre projets, dépendances tournées vers l'intérieur :
 L'objection est réelle : quatre projets pour mille lignes, c'est plus de fichiers de projet que
 de classes dans certains dossiers. Trois raisons l'emportent.
 
-**Le cœur devient testable, et il ne l'était pas du tout.** 92 tests couvrent la composition du
-menu, l'ordre d'affichage, le choix des icônes, la validation de configuration et le lancement.
+**Le cœur devient testable, et il ne l'était pas du tout.** Plus de cent tests couvrent la
+composition du menu, l'ordre d'affichage, le choix des icônes, la validation de configuration et
+le lancement.
 Ils s'exécutent en une centaine de millisecondes, sans écran ni disque. Ce n'est pas un gain
 théorique : les deux anomalies décrites en [ADR-0005](0005-cibles-de-lancement.md) et dans
 SPEC-CFG-002 ont été trouvées en écrivant ces tests.

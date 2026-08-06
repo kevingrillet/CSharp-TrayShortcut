@@ -75,7 +75,7 @@ jobs:
             -DestinationPath 'TrayShortcut-${{ github.ref_name }}-win-x64.zip' -Force
 
       - name: Création de la release GitHub
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: TrayShortcut-${{ github.ref_name }}-win-x64.zip
           generate_release_notes: true

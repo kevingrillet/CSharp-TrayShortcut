@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Formulations françaises — langue neutre du dépôt (Directory.Build.props, NeutralLanguage).
+    Ce fichier est compilé dans l'assembly principal ; l'anglais part en assembly satellite
+    (Strings.en.resx). Voir ADR-0004.
+
+    Les clés sont celles de CSharpTrayShortcut.Domain.Text.TextKeys : ne jamais en inventer
+    une ici sans la constante correspondante, un test de garde le vérifie.
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Commun -->
+  <data name="Common.Empty" xml:space="preserve">
+    <value />
+    <comment>Fragment vide : une partie facultative absente d'une phrase.</comment>
+  </data>
+  <data name="Common.AppName" xml:space="preserve">
+    <value>Tray Shortcut</value>
+    <comment>Nom du produit : identique dans toutes les langues.</comment>
+  </data>
+
+  <!-- Menu de la zone de notification -->
+  <data name="Menu.Refresh" xml:space="preserve">
+    <value>Actualiser</value>
+  </data>
+  <data name="Menu.Edit" xml:space="preserve">
+    <value>Modifier…</value>
+  </data>
+  <data name="Menu.Exit" xml:space="preserve">
+    <value>Quitter</value>
+  </data>
+  <data name="Menu.Customs" xml:space="preserve">
+    <value>Raccourcis personnalisés</value>
+    <comment>Section regroupant les raccourcis déclarés dans la configuration.</comment>
+  </data>
+  <data name="Menu.Tooltip" xml:space="preserve">
+    <value>{0} — {1}</value>
+    <comment>{0} = nom du produit, {1} = dossier surveillé.</comment>
+  </data>
+  <data name="Menu.Empty" xml:space="preserve">
+    <value>(dossier vide)</value>
+    <comment>Affiché quand le dossier surveillé ne contient rien de présentable.</comment>
+  </data>
+
+  <!-- Fenêtre d'édition des raccourcis personnalisés -->
+  <data name="Editor.Title" xml:space="preserve">
+    <value>Raccourcis personnalisés</value>
+  </data>
+  <data name="Editor.Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="Editor.DeleteRow" xml:space="preserve">
+    <value>Supprimer la ligne</value>
+  </data>
+  <data name="Editor.ShowFile" xml:space="preserve">
+    <value>Ouvrir le fichier de configuration</value>
+  </data>
+  <data name="Editor.Column.Text" xml:space="preserve">
+    <value>Intitulé</value>
+  </data>
+  <data name="Editor.Column.Path" xml:space="preserve">
+    <value>Chemin</value>
+  </data>
+  <data name="Editor.Column.Argument" xml:space="preserve">
+    <value>Argument</value>
+  </data>
+  <data name="Editor.Column.Image" xml:space="preserve">
+    <value>Icône</value>
+  </data>
+
+  <!-- Configuration -->
+  <data name="Config.FolderPrompt" xml:space="preserve">
+    <value>Indiquez le dossier dont le contenu doit apparaître dans le menu :</value>
+  </data>
+  <data name="Config.FolderMissing" xml:space="preserve">
+    <value>Dossier introuvable : {0}</value>
+    <comment>{0} = chemin configuré, devenu inaccessible.</comment>
+  </data>
+  <data name="Config.FolderUnset" xml:space="preserve">
+    <value>Aucun dossier configuré</value>
+  </data>
+  <data name="Config.PathMissing" xml:space="preserve">
+    <value>Aucun dossier à surveiller n'est renseigné.</value>
+  </data>
+  <data name="Config.PathNotFound" xml:space="preserve">
+    <value>Le dossier « {0} » est introuvable ou inaccessible.</value>
+    <comment>{0} = chemin configuré.</comment>
+  </data>
+
+  <!-- Erreurs -->
+  <data name="Error.LaunchFailed" xml:space="preserve">
+    <value>Impossible d'ouvrir « {0} ».</value>
+    <comment>{0} = chemin de la cible refusée par le système.</comment>
+  </data>
+  <data name="Error.SaveFailed" xml:space="preserve">
+    <value>La configuration n'a pas pu être enregistrée dans « {0} ».</value>
+    <comment>{0} = chemin du fichier de configuration.</comment>
+  </data>
+  <data name="Error.Fatal" xml:space="preserve">
+    <value>Une erreur inattendue a interrompu {0}. Le détail a été écrit dans « {1} ».</value>
+    <comment>{0} = nom du produit, {1} = chemin du rapport de plantage.</comment>
+  </data>
+</root>

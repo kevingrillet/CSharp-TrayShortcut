@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Couche DOMAINE : entités, objets-valeur, énumérations, clés de textes.
+
+    Aucune référence, ni de projet ni de paquet — pas même vers System.Drawing ou
+    System.Windows.Forms. C'est cette absence qui garantit que les règles du domaine se
+    testent sans Windows, et que « ce qu'est un raccourci » ne dépend pas de la façon dont
+    on l'affiche.
+  -->
+  <PropertyGroup>
+    <RootNamespace>CSharpTrayShortcut.Domain</RootNamespace>
+  </PropertyGroup>
+
+</Project>

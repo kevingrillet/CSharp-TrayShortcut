@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    English wording — satellite assembly (see ADR-0004).
+    Keys must match Strings.resx exactly: a guard test fails on any key present on one side
+    only. Comments explaining the placeholders live in the French file, which is the source.
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Common -->
+  <data name="Common.Empty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Common.AppName" xml:space="preserve">
+    <value>Tray Shortcut</value>
+  </data>
+
+  <!-- Notification area menu -->
+  <data name="Menu.Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Menu.Edit" xml:space="preserve">
+    <value>Edit…</value>
+  </data>
+  <data name="Menu.Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Menu.Customs" xml:space="preserve">
+    <value>Custom shortcuts</value>
+  </data>
+  <data name="Menu.Tooltip" xml:space="preserve">
+    <value>{0} — {1}</value>
+  </data>
+  <data name="Menu.Empty" xml:space="preserve">
+    <value>(empty folder)</value>
+  </data>
+
+  <!-- Custom shortcuts editor -->
+  <data name="Editor.Title" xml:space="preserve">
+    <value>Custom shortcuts</value>
+  </data>
+  <data name="Editor.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Editor.DeleteRow" xml:space="preserve">
+    <value>Delete row</value>
+  </data>
+  <data name="Editor.ShowFile" xml:space="preserve">
+    <value>Open configuration file</value>
+  </data>
+  <data name="Editor.Column.Text" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="Editor.Column.Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="Editor.Column.Argument" xml:space="preserve">
+    <value>Argument</value>
+  </data>
+  <data name="Editor.Column.Image" xml:space="preserve">
+    <value>Icon</value>
+  </data>
+
+  <!-- Configuration -->
+  <data name="Config.FolderPrompt" xml:space="preserve">
+    <value>Enter the folder whose contents should appear in the menu:</value>
+  </data>
+  <data name="Config.FolderMissing" xml:space="preserve">
+    <value>Folder not found: {0}</value>
+  </data>
+  <data name="Config.FolderUnset" xml:space="preserve">
+    <value>No folder configured</value>
+  </data>
+  <data name="Config.PathMissing" xml:space="preserve">
+    <value>No folder to watch has been set.</value>
+  </data>
+  <data name="Config.PathNotFound" xml:space="preserve">
+    <value>Folder “{0}” is missing or unreachable.</value>
+  </data>
+
+  <!-- Errors -->
+  <data name="Error.LaunchFailed" xml:space="preserve">
+    <value>Cannot open “{0}”.</value>
+  </data>
+  <data name="Error.SaveFailed" xml:space="preserve">
+    <value>The configuration could not be saved to “{0}”.</value>
+  </data>
+  <data name="Error.Fatal" xml:space="preserve">
+    <value>An unexpected error stopped {0}. Details were written to “{1}”.</value>
+  </data>
+</root>

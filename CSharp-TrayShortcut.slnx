@@ -1,0 +1,24 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/racine/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="CHANGELOG.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="NuGet.Config" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/CSharpTrayShortcut.Domain/CSharpTrayShortcut.Domain.csproj" />
+    <Project Path="src/CSharpTrayShortcut.Application/CSharpTrayShortcut.Application.csproj" />
+    <Project Path="src/CSharpTrayShortcut.Infrastructure/CSharpTrayShortcut.Infrastructure.csproj" />
+    <Project Path="src/CSharpTrayShortcut.Ui/CSharpTrayShortcut.Ui.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CSharpTrayShortcut.Tests/CSharpTrayShortcut.Tests.csproj" />
+  </Folder>
+</Solution>

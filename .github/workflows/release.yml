@@ -1,0 +1,83 @@
+# Publication d'une version distribuable de « Tray Shortcut ».
+#
+# Déclencheur : la poussée d'un tag « v* » (par exemple v1.2.0). Le numéro de version est
+# déduit du tag et injecté dans les assemblies, pour que le binaire livré porte le même
+# numéro que la release.
+#
+#   git tag v1.2.0
+#   git push origin v1.2.0
+#
+# Un tag contenant un tiret (v1.2.0-beta.1) crée une préversion.
+
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+# Nécessaire pour créer la release et y attacher l'archive. Aucun secret à configurer :
+# GITHUB_TOKEN est fourni automatiquement à chaque exécution.
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  SOLUTION: CSharp-TrayShortcut.slnx
+
+jobs:
+  publier:
+    name: Publication win-x64
+    runs-on: windows-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Récupération du dépôt
+        uses: actions/checkout@v7
+
+      - name: Installation du SDK .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      # « v1.2.0 » -> « 1.2.0 ». Le numéro sert à -p:Version et au nom de l'archive.
+      - name: Déduction du numéro de version
+        id: version
+        shell: pwsh
+        run: |
+          $version = '${{ github.ref_name }}' -replace '^v', ''
+          "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Version publiée : $version"
+
+      - name: Restauration des dépendances
+        run: dotnet restore ${{ env.SOLUTION }}
+
+      - name: Compilation en Release
+        run: dotnet build ${{ env.SOLUTION }} --no-restore -c Release -p:Version=${{ steps.version.outputs.version }}
+
+      # On ne publie jamais une version dont les tests échouent.
+      - name: Exécution des tests unitaires
+        run: dotnet test ${{ env.SOLUTION }} --no-build -c Release
+
+      # Framework-dependent : archive légère, mais le poste cible doit avoir le runtime
+      # .NET 9 Desktop (x64). Pour un exécutable autonome, passer --self-contained true.
+      - name: Publication de l'interface
+        run: >
+          dotnet publish src/CSharpTrayShortcut.Ui
+          -c Release -r win-x64 --self-contained false
+          -p:Version=${{ steps.version.outputs.version }}
+          -o publish
+
+      - name: Création de l'archive
+        shell: pwsh
+        run: |
+          Compress-Archive -Path 'publish\*' `
+            -DestinationPath 'TrayShortcut-${{ github.ref_name }}-win-x64.zip' -Force
+
+      - name: Création de la release GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          files: TrayShortcut-${{ github.ref_name }}-win-x64.zip
+          generate_release_notes: true
+          # Un tag préversion (v1.2.0-beta.1) est marqué comme tel.
+          prerelease: ${{ contains(github.ref_name, '-') }}

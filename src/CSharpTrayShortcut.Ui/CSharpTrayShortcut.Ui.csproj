@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Couche PRÉSENTATION (WinForms) : icône de la zone de notification, menu contextuel,
+    fenêtre d'édition, fabrication des images d'icônes. C'est aussi la racine de composition
+    (Composition/ServiceRegistration.cs) : le seul endroit qui connaisse à la fois les ports
+    et leurs implémentations.
+
+    Contrairement à Forge Watcher, aucune version minimale de Windows 10 n'est exigée :
+    l'application n'utilise pas les notifications toast modernes, seulement un NotifyIcon.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>CSharpTrayShortcut.Ui</RootNamespace>
+    <AssemblyName>TrayShortcut</AssemblyName>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <ApplicationDefaultFont>Segoe UI, 9pt</ApplicationDefaultFont>
+    <!--
+      Icône de l'exécutable. C'est aussi le repli de l'icône affichée dans la zone de
+      notification quand la configuration n'en désigne aucune (SPEC-UI-ICON-001).
+    -->
+    <ApplicationIcon>..\..\assets\icons\tray-shortcut.ico</ApplicationIcon>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CSharpTrayShortcut.Application\CSharpTrayShortcut.Application.csproj" />
+    <ProjectReference Include="..\CSharpTrayShortcut.Infrastructure\CSharpTrayShortcut.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
+  </ItemGroup>
+
+  <!--
+    Icônes livrées avec l'application : celles que la configuration peut désigner par leur
+    seul nom de fichier (« folder_w11.ico ») plutôt que par un chemin absolu.
+  -->
+  <ItemGroup>
+    <Content Include="..\..\assets\icons\*.ico" Link="Icons\%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

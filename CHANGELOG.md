@@ -46,8 +46,8 @@ installée n'importe où.
   a été ignoré, et pourquoi.
 - **Raccourcis clavier** dans la fenêtre d'édition : `Ctrl+S` pour enregistrer, `Ctrl+Suppr` pour
   supprimer la ligne courante.
-- **92 tests unitaires**, une documentation de conception (`docs/`) et une intégration continue qui
-  compile, teste et vérifie la mise en forme.
+- **Une suite de tests unitaires**, une documentation de conception (`docs/`) et une intégration
+  continue qui compile, teste et vérifie la mise en forme.
 
 ### Modifié
 

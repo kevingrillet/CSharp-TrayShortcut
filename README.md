@@ -58,8 +58,9 @@ surveillé.*
 **Prérequis** : Windows 10 ou 11, et le [runtime .NET 9 Desktop (x64)](https://dotnet.microsoft.com/download/dotnet/9.0).
 La version autonome n'en a pas besoin.
 
-1. Télécharger l'archive de la [dernière version](../../releases/latest) et la décompresser où vous
-   voulez.
+1. Télécharger l'archive de la
+   [dernière version](https://github.com/kevingrillet/CSharp-TrayShortcut/releases/latest) et la
+   décompresser où vous voulez.
 2. Lancer `TrayShortcut.exe`. Une icône apparaît dans la zone de notification — éventuellement
    derrière la flèche des icônes masquées.
 3. Au premier démarrage, l'application demande **quel dossier surveiller**. Choisissez celui où vous
